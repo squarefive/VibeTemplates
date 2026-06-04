@@ -6,11 +6,13 @@ from pathlib import Path
 REQUIRED_FILES = [
     Path("AGENTS.md"),
     Path("README.md"),
-    Path("docs/ai-guidelines/AI-COLLABORATION.md"),
+    Path("docs/ai-guidelines/AI-CODING-BEHAVIOR.md"),
+    Path("docs/ai-guidelines/COLLABORATION-PROTOCOL.md"),
 ]
 
 REQUIRED_AGENTS_SECTIONS = [
     "# AGENTS.md",
+    "## Guideline Index",
     "## Project Context",
     "## Functional Scope And Completeness",
     "## Module Map",
@@ -27,6 +29,11 @@ REQUIRED_README_SECTIONS = [
 ]
 
 PLACEHOLDER_RE = re.compile(r"{{[^}]+}}")
+
+REQUIRED_GUIDELINE_LINKS = [
+    "docs/ai-guidelines/AI-CODING-BEHAVIOR.md",
+    "docs/ai-guidelines/COLLABORATION-PROTOCOL.md",
+]
 
 
 def parse_args() -> argparse.Namespace:
@@ -49,23 +56,26 @@ def collect_errors(root: Path) -> list[str]:
 
     agents = (root / "AGENTS.md").read_text(encoding="utf-8")
     readme = (root / "README.md").read_text(encoding="utf-8")
-    guideline = (
-        root / "docs" / "ai-guidelines" / "AI-COLLABORATION.md"
-    ).read_text(encoding="utf-8")
+    contents = {
+        relative.as_posix(): (root / relative).read_text(encoding="utf-8")
+        for relative in REQUIRED_FILES
+    }
+    agents = contents["AGENTS.md"]
+    readme = contents["README.md"]
 
     for section in REQUIRED_AGENTS_SECTIONS:
         if section not in agents:
             errors.append(f"AGENTS.md missing section: {section}")
 
+    for guideline_link in REQUIRED_GUIDELINE_LINKS:
+        if guideline_link not in agents:
+            errors.append(f"AGENTS.md missing guideline link: {guideline_link}")
+
     for section in REQUIRED_README_SECTIONS:
         if section not in readme:
             errors.append(f"README.md missing section: {section}")
 
-    for relative, content in {
-        "AGENTS.md": agents,
-        "README.md": readme,
-        "docs/ai-guidelines/AI-COLLABORATION.md": guideline,
-    }.items():
+    for relative, content in contents.items():
         if "TEMPLATE-INSTRUCTION" in content:
             errors.append(f"{relative} contains TEMPLATE-INSTRUCTION")
         if PLACEHOLDER_RE.search(content):

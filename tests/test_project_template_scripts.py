@@ -61,9 +61,15 @@ def test_generates_docs_without_template_artifacts(tmp_path: Path) -> None:
     readme = (output / "README.md").read_text(encoding="utf-8")
     assert "TEMPLATE-INSTRUCTION" not in agents + readme
     assert "{{" not in agents + readme
+    assert "## Guideline Index" in agents
+    assert "docs/ai-guidelines/AI-CODING-BEHAVIOR.md" in agents
+    assert "docs/ai-guidelines/COLLABORATION-PROTOCOL.md" in agents
     assert "## Functional Scope And Completeness" in agents
     assert "A template-derived documentation project." in agents
-    assert (output / "docs" / "ai-guidelines" / "AI-COLLABORATION.md").exists()
+    assert (output / "docs" / "ai-guidelines" / "AI-CODING-BEHAVIOR.md").exists()
+    assert (
+        output / "docs" / "ai-guidelines" / "COLLABORATION-PROTOCOL.md"
+    ).exists()
 
 
 def test_generation_does_not_overwrite_existing_files(tmp_path: Path) -> None:
@@ -102,9 +108,14 @@ def test_validator_rejects_missing_required_section(tmp_path: Path) -> None:
         "# SampleProject\n\n## Overview\n\n## Features\n\n## Project Structure\n\n## Getting Started\n\n## Development\n",
         encoding="utf-8",
     )
-    guideline = output / "docs" / "ai-guidelines" / "AI-COLLABORATION.md"
-    guideline.parent.mkdir(parents=True)
-    guideline.write_text("AI guidance", encoding="utf-8")
+    guideline_dir = output / "docs" / "ai-guidelines"
+    guideline_dir.mkdir(parents=True)
+    (guideline_dir / "AI-CODING-BEHAVIOR.md").write_text(
+        "AI guidance", encoding="utf-8"
+    )
+    (guideline_dir / "COLLABORATION-PROTOCOL.md").write_text(
+        "Collaboration guidance", encoding="utf-8"
+    )
 
     result = run_script(VALIDATE_SCRIPT, "--path", str(output))
 
