@@ -1,5 +1,9 @@
 # AGENTS.md
 
+## Guideline Index
+- `docs/ai-guidelines/AI-CODING-BEHAVIOR.md`: General AI coding behavior rules, including assumption handling, simplicity, surgical changes, and verification-driven execution.
+- `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`: User collaboration protocol, including planning requirements, execution confirmation, branch strategy, merge strategy, and commit preferences.
+
 ## Project Context
 <!-- TEMPLATE-INSTRUCTION:
 Extract stable project background from the user's context.
@@ -29,7 +33,7 @@ If no module information is provided, render: _Not provided._
 ## Project-Specific Agent Rules
 <!-- TEMPLATE-INSTRUCTION:
 Extract only repository-specific agent rules from the user's context.
-Do not repeat general AI collaboration rules from docs/ai-guidelines/AI-COLLABORATION.md.
+Do not repeat general AI coding behavior rules or user collaboration protocol rules from docs/ai-guidelines/.
 If no project-specific rules are provided, render: _Not provided._
 -->
 {{project_specific_agent_rules}}

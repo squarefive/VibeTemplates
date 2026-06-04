@@ -11,7 +11,8 @@ This skill generates:
 
 - `AGENTS.md`
 - `README.md`
-- `docs/ai-guidelines/AI-COLLABORATION.md`
+- `docs/ai-guidelines/AI-CODING-BEHAVIOR.md`
+- `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
 
 Core rule:
 
@@ -39,6 +40,7 @@ Agent-facing project entry file.
 
 Include only stable project facts and project-specific agent rules:
 
+- guideline index
 - project context
 - full functional scope and completeness
 - module map
@@ -46,7 +48,12 @@ Include only stable project facts and project-specific agent rules:
 
 Do not add a current-goal section.
 
-Do not put general AI behavior rules in `AGENTS.md`. General AI behavior rules belong in `docs/ai-guidelines/AI-COLLABORATION.md`.
+Do include a fixed guideline index that links to and briefly describes:
+
+- `docs/ai-guidelines/AI-CODING-BEHAVIOR.md`
+- `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
+
+Do not put general AI behavior rules or user collaboration protocol rules directly in `AGENTS.md`. General rules belong in the files under `docs/ai-guidelines/`.
 
 ### `README.md`
 
@@ -62,11 +69,23 @@ Include:
 
 Do not turn `README.md` into an agent rule file.
 
-### `docs/ai-guidelines/AI-COLLABORATION.md`
+### `docs/ai-guidelines/AI-CODING-BEHAVIOR.md`
 
-General AI collaboration guidance.
+General AI coding behavior guidance.
 
 Copy this file from the bundled template during generation. Do not rewrite it during normal project generation.
+
+This file covers assumption handling, simplicity, surgical changes, and verification-driven execution.
+
+Project-specific rules belong in `AGENTS.md`, not in this file.
+
+### `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
+
+User collaboration protocol.
+
+Copy this file from the bundled template during generation. Do not rewrite it during normal project generation.
+
+This file covers planning requirements, execution confirmation, branch strategy, merge strategy, and commit preferences.
 
 Project-specific rules belong in `AGENTS.md`, not in this file.
 
@@ -152,7 +171,7 @@ Use `_Not provided._` when no module information is extractable.
 
 Extract only rules specific to the target repository.
 
-Do not repeat general rules from `AI-COLLABORATION.md`.
+Do not repeat general rules from files under `docs/ai-guidelines/`.
 
 Use `_Not provided._` when no project-specific agent rules are extractable.
 

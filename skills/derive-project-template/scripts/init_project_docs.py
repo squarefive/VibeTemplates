@@ -102,10 +102,13 @@ def generate(config: dict[str, str], output: Path, overwrite: bool) -> dict[str,
         status = write_file(output / target_name, content, overwrite)
         results[status].append(target_name)
 
-    guideline_source = TEMPLATE_ROOT / "docs" / "ai-guidelines" / "AI-COLLABORATION.md"
-    guideline_target = output / "docs" / "ai-guidelines" / "AI-COLLABORATION.md"
-    status = copy_file(guideline_source, guideline_target, overwrite)
-    results[status].append("docs/ai-guidelines/AI-COLLABORATION.md")
+    guideline_targets = [
+        "docs/ai-guidelines/AI-CODING-BEHAVIOR.md",
+        "docs/ai-guidelines/COLLABORATION-PROTOCOL.md",
+    ]
+    for relative in guideline_targets:
+        status = copy_file(TEMPLATE_ROOT / relative, output / relative, overwrite)
+        results[status].append(relative)
 
     missing_fields = [
         key for key, value in sorted(config.items()) if value.strip() == "_Not provided._"
