@@ -4,6 +4,7 @@
 - `docs/ai-guidelines/AI-CODING-BEHAVIOR.md`: General AI coding behavior rules, including assumption handling, simplicity, surgical changes, and verification-driven execution.
 - `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`: User collaboration protocol, including planning requirements, execution confirmation, branch strategy, merge strategy, and commit preferences.
 
+{{agent_development_context_index}}
 ## Project Context
 <!-- TEMPLATE-INSTRUCTION:
 Extract stable project background from the user's context.
