@@ -70,6 +70,8 @@ def test_generates_docs_without_template_artifacts(tmp_path: Path) -> None:
     assert (
         output / "docs" / "ai-guidelines" / "COLLABORATION-PROTOCOL.md"
     ).exists()
+    assert not (output / "docs" / "agents").exists()
+    assert not (output / "scripts" / "check-agent-doc-format.py").exists()
 
 
 def test_generation_does_not_overwrite_existing_files(tmp_path: Path) -> None:
@@ -98,6 +100,47 @@ def test_validator_accepts_generated_structure(tmp_path: Path) -> None:
 
     assert result.returncode == 0, result.stdout + result.stderr
     assert "validation passed" in result.stdout.lower()
+
+
+def test_generates_agent_context_when_agent_fields_are_provided(tmp_path: Path) -> None:
+    config = tmp_path / "project.json"
+    output = tmp_path / "out"
+    write_config(
+        config,
+        agent_module_name="personal_knowledge_agent",
+        agent_chinese_name="个人知识",
+        agent_language="Python",
+        agent_type="Tool-Using Agent",
+    )
+
+    generated = run_script(INIT_SCRIPT, "--config", str(config), "--output", str(output))
+
+    assert generated.returncode == 0, generated.stderr
+    agent_doc = output / "docs" / "agents" / "personal_knowledge_agent.md"
+    checker = output / "scripts" / "check-agent-doc-format.py"
+    assert agent_doc.exists()
+    assert checker.exists()
+    assert not (output / "docs" / "templates" / "agent-development-context.template.md").exists()
+
+    agents = (output / "AGENTS.md").read_text(encoding="utf-8")
+    agent_content = agent_doc.read_text(encoding="utf-8")
+    assert "## Agent Development Context Index" in agents
+    assert "docs/agents/personal_knowledge_agent.md" in agents
+    assert "# 个人知识 Agent 开发上下文" in agent_content
+    assert "{{" not in agent_content
+
+    validation = run_script(VALIDATE_SCRIPT, "--path", str(output))
+
+    assert validation.returncode == 0, validation.stdout + validation.stderr
+    assert "validation passed" in validation.stdout.lower()
+
+    checker_result = subprocess.run(
+        [sys.executable, str(checker), "docs/agents/personal_knowledge_agent.md"],
+        cwd=output,
+        text=True,
+        capture_output=True,
+    )
+    assert checker_result.returncode == 0, checker_result.stdout + checker_result.stderr
 
 
 def test_validator_rejects_missing_required_section(tmp_path: Path) -> None:

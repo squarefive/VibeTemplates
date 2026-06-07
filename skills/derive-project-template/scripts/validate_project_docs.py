@@ -1,5 +1,7 @@
 import argparse
 import re
+import subprocess
+import sys
 from pathlib import Path
 
 
@@ -34,6 +36,9 @@ REQUIRED_GUIDELINE_LINKS = [
     "docs/ai-guidelines/AI-CODING-BEHAVIOR.md",
     "docs/ai-guidelines/COLLABORATION-PROTOCOL.md",
 ]
+
+AGENT_INDEX_SECTION = "## Agent Development Context Index"
+AGENT_CHECKER = Path("scripts/check-agent-doc-format.py")
 
 
 def parse_args() -> argparse.Namespace:
@@ -80,6 +85,34 @@ def collect_errors(root: Path) -> list[str]:
             errors.append(f"{relative} contains TEMPLATE-INSTRUCTION")
         if PLACEHOLDER_RE.search(content):
             errors.append(f"{relative} contains unresolved placeholder")
+
+    agent_docs = sorted((root / "docs" / "agents").glob("*.md"))
+    if agent_docs:
+        if AGENT_INDEX_SECTION not in agents:
+            errors.append(f"AGENTS.md missing section: {AGENT_INDEX_SECTION}")
+
+        for agent_doc in agent_docs:
+            relative = agent_doc.relative_to(root).as_posix()
+            if relative not in agents:
+                errors.append(f"AGENTS.md missing agent context link: {relative}")
+
+        checker = root / AGENT_CHECKER
+        if not checker.exists():
+            errors.append(f"Missing agent doc checker: {AGENT_CHECKER.as_posix()}")
+        else:
+            result = subprocess.run(
+                [sys.executable, str(checker), *[str(path) for path in agent_docs]],
+                cwd=root,
+                text=True,
+                capture_output=True,
+            )
+            if result.returncode != 0:
+                details = "\n".join(
+                    line
+                    for line in (result.stdout + result.stderr).splitlines()
+                    if line.strip()
+                )
+                errors.append(f"Agent doc format check failed:\n{details}")
 
     return errors
 
