@@ -151,12 +151,15 @@ def generate(config: dict[str, str], output: Path, overwrite: bool) -> dict[str,
         results[status].append(target_name)
 
     guideline_targets = [
-        "docs/ai-guidelines/AI-CODING-BEHAVIOR.md",
         "docs/ai-guidelines/COLLABORATION-PROTOCOL.md",
     ]
     for relative in guideline_targets:
         status = copy_file(TEMPLATE_ROOT / relative, output / relative, overwrite)
         results[status].append(relative)
+
+    karpathy_skill = ".agents/skills/karpathy-guidelines/SKILL.md"
+    status = copy_file(TEMPLATE_ROOT / karpathy_skill, output / karpathy_skill, overwrite)
+    results[status].append(karpathy_skill)
 
     if agent_project_enabled(config):
         agent_template = (

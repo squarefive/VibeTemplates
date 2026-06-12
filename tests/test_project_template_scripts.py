@@ -8,6 +8,16 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "derive-project-template"
 INIT_SCRIPT = SKILL / "scripts" / "init_project_docs.py"
 VALIDATE_SCRIPT = SKILL / "scripts" / "validate_project_docs.py"
+REPO_KARPATHY_SKILL = ROOT / ".agents" / "skills" / "karpathy-guidelines" / "SKILL.md"
+TEMPLATE_KARPATHY_SKILL = (
+    SKILL
+    / "assets"
+    / "templates"
+    / ".agents"
+    / "skills"
+    / "karpathy-guidelines"
+    / "SKILL.md"
+)
 
 
 def run_script(script: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -62,13 +72,16 @@ def test_generates_docs_without_template_artifacts(tmp_path: Path) -> None:
     assert "TEMPLATE-INSTRUCTION" not in agents + readme
     assert "{{" not in agents + readme
     assert "## Guideline Index" in agents
-    assert "docs/ai-guidelines/AI-CODING-BEHAVIOR.md" in agents
+    assert "AI-CODING-BEHAVIOR.md" not in agents
     assert "docs/ai-guidelines/COLLABORATION-PROTOCOL.md" in agents
     assert "## Functional Scope And Completeness" in agents
     assert "A template-derived documentation project." in agents
-    assert (output / "docs" / "ai-guidelines" / "AI-CODING-BEHAVIOR.md").exists()
+    assert not (output / "docs" / "ai-guidelines" / "AI-CODING-BEHAVIOR.md").exists()
     assert (
         output / "docs" / "ai-guidelines" / "COLLABORATION-PROTOCOL.md"
+    ).exists()
+    assert (
+        output / ".agents" / "skills" / "karpathy-guidelines" / "SKILL.md"
     ).exists()
     assert not (output / "docs" / "agents").exists()
     assert not (output / "scripts" / "check-agent-doc-format.py").exists()
@@ -100,6 +113,12 @@ def test_validator_accepts_generated_structure(tmp_path: Path) -> None:
 
     assert result.returncode == 0, result.stdout + result.stderr
     assert "validation passed" in result.stdout.lower()
+
+
+def test_bundled_karpathy_guidelines_matches_repo_skill() -> None:
+    assert TEMPLATE_KARPATHY_SKILL.read_text(
+        encoding="utf-8"
+    ) == REPO_KARPATHY_SKILL.read_text(encoding="utf-8")
 
 
 def test_generates_agent_context_when_agent_fields_are_provided(tmp_path: Path) -> None:
@@ -153,12 +172,12 @@ def test_validator_rejects_missing_required_section(tmp_path: Path) -> None:
     )
     guideline_dir = output / "docs" / "ai-guidelines"
     guideline_dir.mkdir(parents=True)
-    (guideline_dir / "AI-CODING-BEHAVIOR.md").write_text(
-        "AI guidance", encoding="utf-8"
-    )
     (guideline_dir / "COLLABORATION-PROTOCOL.md").write_text(
         "Collaboration guidance", encoding="utf-8"
     )
+    karpathy_skill = output / ".agents" / "skills" / "karpathy-guidelines" / "SKILL.md"
+    karpathy_skill.parent.mkdir(parents=True)
+    karpathy_skill.write_text("Karpathy guidance", encoding="utf-8")
 
     result = run_script(VALIDATE_SCRIPT, "--path", str(output))
 

@@ -8,8 +8,8 @@ from pathlib import Path
 REQUIRED_FILES = [
     Path("AGENTS.md"),
     Path("README.md"),
-    Path("docs/ai-guidelines/AI-CODING-BEHAVIOR.md"),
     Path("docs/ai-guidelines/COLLABORATION-PROTOCOL.md"),
+    Path(".agents/skills/karpathy-guidelines/SKILL.md"),
 ]
 
 REQUIRED_AGENTS_SECTIONS = [
@@ -33,7 +33,6 @@ REQUIRED_README_SECTIONS = [
 PLACEHOLDER_RE = re.compile(r"{{[^}]+}}")
 
 REQUIRED_GUIDELINE_LINKS = [
-    "docs/ai-guidelines/AI-CODING-BEHAVIOR.md",
     "docs/ai-guidelines/COLLABORATION-PROTOCOL.md",
 ]
 

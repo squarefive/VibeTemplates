@@ -11,8 +11,8 @@ This skill generates:
 
 - `AGENTS.md`
 - `README.md`
-- `docs/ai-guidelines/AI-CODING-BEHAVIOR.md`
 - `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
+- `.agents/skills/karpathy-guidelines/SKILL.md`
 
 Core rule:
 
@@ -54,13 +54,12 @@ Do not add a current-goal section.
 
 Do include a fixed guideline index that links to and briefly describes:
 
-- `docs/ai-guidelines/AI-CODING-BEHAVIOR.md`
 - `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
 
 When an Agent development context is generated, also include an Agent
 development context index linking to the generated `docs/agents/<agent>.md`.
 
-Do not put general AI behavior rules or user collaboration protocol rules directly in `AGENTS.md`. General rules belong in the files under `docs/ai-guidelines/`.
+Do not put general AI behavior rules or user collaboration protocol rules directly in `AGENTS.md`. General AI coding behavior rules belong in `.agents/skills/karpathy-guidelines/SKILL.md`; collaboration protocol rules belong in `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`.
 
 ### `README.md`
 
@@ -76,16 +75,6 @@ Include:
 
 Do not turn `README.md` into an agent rule file.
 
-### `docs/ai-guidelines/AI-CODING-BEHAVIOR.md`
-
-General AI coding behavior guidance.
-
-Copy this file from the bundled template during generation. Do not rewrite it during normal project generation.
-
-This file covers assumption handling, simplicity, surgical changes, and verification-driven execution.
-
-Project-specific rules belong in `AGENTS.md`, not in this file.
-
 ### `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
 
 User collaboration protocol.
@@ -93,6 +82,16 @@ User collaboration protocol.
 Copy this file from the bundled template during generation. Do not rewrite it during normal project generation.
 
 This file covers planning requirements, execution confirmation, branch strategy, merge strategy, and commit preferences.
+
+Project-specific rules belong in `AGENTS.md`, not in this file.
+
+### `.agents/skills/karpathy-guidelines/SKILL.md`
+
+General AI coding behavior skill.
+
+Copy this file from the bundled template during generation. Do not rewrite it during normal project generation.
+
+This file provides the `karpathy-guidelines` Codex skill for assumption handling, simplicity, surgical changes, and verification-driven execution.
 
 Project-specific rules belong in `AGENTS.md`, not in this file.
 
@@ -200,7 +199,7 @@ Use `_Not provided._` when no module information is extractable.
 
 Extract only rules specific to the target repository.
 
-Do not repeat general rules from files under `docs/ai-guidelines/`.
+Do not repeat general AI coding behavior rules from `.agents/skills/karpathy-guidelines/SKILL.md` or collaboration protocol rules from `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`.
 
 Use `_Not provided._` when no project-specific agent rules are extractable.
 
@@ -288,6 +287,8 @@ python skills/derive-project-template/scripts/validate_project_docs.py --path <t
 ```
 
 Validation checks structure, not content completeness. `_Not provided._` is valid output.
+
+General AI coding behavior is validated as a generated Codex skill at `.agents/skills/karpathy-guidelines/SKILL.md`, not as a project-local Markdown guideline under `docs/ai-guidelines/`.
 
 For Agent projects, validation also runs:
 

@@ -12,8 +12,10 @@ For a normal project, the skill generates:
 
 - `AGENTS.md`
 - `README.md`
-- `docs/ai-guidelines/AI-CODING-BEHAVIOR.md`
 - `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
+- `.agents/skills/karpathy-guidelines/SKILL.md`
+
+The generated `karpathy-guidelines` skill provides general AI coding behavior rules for Codex. This repository also includes the same skill under `.agents/skills/karpathy-guidelines/SKILL.md`.
 
 For an Agent development project, when `agent_module_name` and `agent_chinese_name` are provided, it also generates:
 
