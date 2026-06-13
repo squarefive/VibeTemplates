@@ -17,6 +17,18 @@ For a normal project, the skill generates:
 
 The generated `karpathy-guidelines` skill provides general AI coding behavior rules for Codex. This repository also includes the same skill under `.agents/skills/karpathy-guidelines/SKILL.md`.
 
+## Code Readability MCP
+
+This repository includes `tools/code-readability-mcp`, a reusable MCP server for cross-repository code readability diagnostics.
+
+The first version supports Python and provides three tools:
+
+- `explain_code_readability_rules`
+- `list_code_readability_targets`
+- `analyze_code_readability`
+
+Use it when you want Codex to diagnose docstring coverage, semantic naming, magic numbers, type annotations, exception handling, function length, and nesting depth across repositories.
+
 For an Agent development project, when `agent_module_name` and `agent_chinese_name` are provided, it also generates:
 
 - `docs/agents/<agent>.md`

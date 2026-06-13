@@ -34,6 +34,11 @@ When the target project is an Agent development project, also generate an Agent
 development context document and validate it with the generated Agent doc
 checker.
 
+When initializing a project that will generate or modify code, check whether
+the code readability MCP is configured. If it is not configured, tell the user
+that this repository provides `tools/code-readability-mcp` and ask before
+adding local Codex MCP configuration.
+
 Ask a follow-up question only when the user explicitly requests complete documentation and the missing information blocks generation.
 
 ## Output Responsibilities

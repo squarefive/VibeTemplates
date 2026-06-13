@@ -121,6 +121,14 @@ def test_bundled_karpathy_guidelines_matches_repo_skill() -> None:
     ) == REPO_KARPATHY_SKILL.read_text(encoding="utf-8")
 
 
+def test_skill_mentions_code_readability_mcp_configuration() -> None:
+    skill = (SKILL / "SKILL.md").read_text(encoding="utf-8")
+
+    assert "tools/code-readability-mcp" in skill
+    assert "ask before" in skill
+    assert "local Codex MCP configuration" in skill
+
+
 def test_generates_agent_context_when_agent_fields_are_provided(tmp_path: Path) -> None:
     config = tmp_path / "project.json"
     output = tmp_path / "out"
