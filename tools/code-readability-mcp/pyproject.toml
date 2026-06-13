@@ -1,0 +1,16 @@
+[project]
+name = "code-readability-mcp"
+version = "0.1.0"
+description = "MCP server for cross-repository code readability diagnostics."
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+mcp = ["mcp"]
+
+[project.scripts]
+code-readability-mcp = "code_readability_mcp.mcp_server:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
