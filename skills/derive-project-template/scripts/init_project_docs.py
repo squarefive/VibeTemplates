@@ -27,6 +27,84 @@ OPTIONAL_AGENT_FIELDS = {
     "agent_chinese_name",
     "agent_language",
     "agent_type",
+    "agent_background",
+    "agent_core_value",
+    "agent_role",
+    "agent_core_goals",
+    "agent_included_capabilities",
+    "agent_excluded_capabilities",
+    "agent_behavior_constraints",
+    "agent_loop_responsibilities",
+    "agent_prompt_builder_responsibilities",
+    "agent_tools_responsibilities",
+    "agent_services_repositories_responsibilities",
+    "agent_storage_external_api_responsibilities",
+    "agent_core_files_table_rows",
+    "agent_tool_table_rows",
+    "agent_tool_contract_name",
+    "agent_tool_contract_responsibility",
+    "agent_tool_input_json_fields",
+    "agent_tool_output_json_fields",
+    "agent_tool_side_effects",
+    "agent_tool_failure_handling",
+    "agent_runtime_context_sources",
+    "agent_long_term_memory_sources",
+    "agent_memory_exclusions",
+    "agent_context_trimming_rules",
+    "agent_core_workflow_name",
+    "agent_core_workflow_steps",
+    "agent_core_workflow_success_conditions",
+    "agent_core_workflow_failure_conditions",
+    "agent_core_workflow_user_feedback",
+    "agent_data_model_name",
+    "agent_data_model_table_rows",
+    "agent_data_constraints",
+    "agent_failure_mode_table_rows",
+    "agent_degradation_principles",
+    "agent_unit_tests",
+    "agent_integration_tests",
+    "agent_regression_tests",
+    "agent_acceptance_checklist",
+    "agent_initial_commit",
+}
+
+OPTIONAL_AGENT_FIELD_DEFAULTS = {
+    "agent_core_goals": "1. _Not provided._",
+    "agent_included_capabilities": "1. _Not provided._",
+    "agent_excluded_capabilities": "1. _Not provided._",
+    "agent_behavior_constraints": "1. _Not provided._",
+    "agent_loop_responsibilities": "- _Not provided._",
+    "agent_prompt_builder_responsibilities": "- _Not provided._",
+    "agent_tools_responsibilities": "- _Not provided._",
+    "agent_services_repositories_responsibilities": "- _Not provided._",
+    "agent_storage_external_api_responsibilities": "- _Not provided._",
+    "agent_core_files_table_rows": "| _Not provided._ | _Not provided._ |",
+    "agent_tool_table_rows": (
+        "| _Not provided._ | _Not provided._ | _Not provided._ | "
+        "_Not provided._ | _Not provided._ |"
+    ),
+    "agent_tool_contract_name": "_Not provided._",
+    "agent_tool_input_json_fields": '"not_provided": "_Not provided._"',
+    "agent_tool_output_json_fields": '"not_provided": "_Not provided._"',
+    "agent_runtime_context_sources": "1. _Not provided._",
+    "agent_long_term_memory_sources": "1. _Not provided._",
+    "agent_memory_exclusions": "1. _Not provided._",
+    "agent_context_trimming_rules": "1. _Not provided._",
+    "agent_core_workflow_name": "_Not provided._",
+    "agent_core_workflow_steps": "1. _Not provided._",
+    "agent_data_model_name": "_Not provided._",
+    "agent_data_model_table_rows": (
+        "| _Not provided._ | _Not provided._ | _Not provided._ | _Not provided._ |"
+    ),
+    "agent_data_constraints": "1. _Not provided._",
+    "agent_failure_mode_table_rows": (
+        "| _Not provided._ | _Not provided._ | _Not provided._ | _Not provided._ |"
+    ),
+    "agent_degradation_principles": "1. _Not provided._",
+    "agent_unit_tests": "1. _Not provided._",
+    "agent_integration_tests": "1. _Not provided._",
+    "agent_regression_tests": "1. _Not provided._",
+    "agent_acceptance_checklist": "1. _Not provided._",
 }
 
 TEMPLATE_INSTRUCTION_RE = re.compile(
@@ -60,9 +138,10 @@ def load_config(config_path: Path) -> dict[str, str]:
 
     normalized = {}
     for key in REQUIRED_FIELDS | OPTIONAL_AGENT_FIELDS:
-        value = data.get(key, "_Not provided._")
+        default = OPTIONAL_AGENT_FIELD_DEFAULTS.get(key, "_Not provided._")
+        value = data.get(key, default)
         if value is None or value == "":
-            value = "_Not provided._"
+            value = default
         if not isinstance(value, str):
             raise ValueError(f"Config field must be a string: {key}")
         normalized[key] = value

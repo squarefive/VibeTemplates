@@ -110,6 +110,10 @@ Generate this file only when both `agent_module_name` and
 `_Not provided._`; do not invent role boundaries, tools, workflows, data
 models, or testing requirements.
 
+When Agent document content is available, fill the Agent template placeholders
+from provided context while preserving the template's section, list, table, and
+JSON sample structure.
+
 Do not generate the raw Agent template into the target project.
 
 ### `scripts/check-agent-doc-format.py`
@@ -138,7 +142,46 @@ Prepare this JSON shape before generation:
   "agent_module_name": "",
   "agent_chinese_name": "",
   "agent_language": "",
-  "agent_type": ""
+  "agent_type": "",
+  "agent_background": "",
+  "agent_core_value": "",
+  "agent_role": "",
+  "agent_core_goals": "",
+  "agent_included_capabilities": "",
+  "agent_excluded_capabilities": "",
+  "agent_behavior_constraints": "",
+  "agent_loop_responsibilities": "",
+  "agent_prompt_builder_responsibilities": "",
+  "agent_tools_responsibilities": "",
+  "agent_services_repositories_responsibilities": "",
+  "agent_storage_external_api_responsibilities": "",
+  "agent_core_files_table_rows": "",
+  "agent_tool_table_rows": "",
+  "agent_tool_contract_name": "",
+  "agent_tool_contract_responsibility": "",
+  "agent_tool_input_json_fields": "",
+  "agent_tool_output_json_fields": "",
+  "agent_tool_side_effects": "",
+  "agent_tool_failure_handling": "",
+  "agent_runtime_context_sources": "",
+  "agent_long_term_memory_sources": "",
+  "agent_memory_exclusions": "",
+  "agent_context_trimming_rules": "",
+  "agent_core_workflow_name": "",
+  "agent_core_workflow_steps": "",
+  "agent_core_workflow_success_conditions": "",
+  "agent_core_workflow_failure_conditions": "",
+  "agent_core_workflow_user_feedback": "",
+  "agent_data_model_name": "",
+  "agent_data_model_table_rows": "",
+  "agent_data_constraints": "",
+  "agent_failure_mode_table_rows": "",
+  "agent_degradation_principles": "",
+  "agent_unit_tests": "",
+  "agent_integration_tests": "",
+  "agent_regression_tests": "",
+  "agent_acceptance_checklist": "",
+  "agent_initial_commit": ""
 }
 ```
 
@@ -245,6 +288,47 @@ Use the Agent type when available, such as `Tool-Using Agent`, `RAG Agent`,
 `Workflow Agent`, or `Multi-Agent`.
 
 Use `_Not provided._` when no Agent type is extractable.
+
+### Agent document content fields
+
+Use the `agent_*` content fields only for information extractable from the
+user prompt, conversation context, or provided files. Do not invent Agent role
+boundaries, tools, workflows, data models, memory behavior, failure modes,
+permission rules, dependencies, or testing requirements to make the document
+look complete.
+
+For list fields, provide Markdown list items without changing the surrounding
+template heading. For table row fields, provide Markdown table rows only and
+do not repeat the table header. For JSON fields, provide JSON object fields
+only and do not include the outer `{}` braces. If a field cannot be extracted,
+use `_Not provided._`; the generator supplies structure-specific fallback
+content for list, table, and JSON fields.
+
+Content field groups:
+
+- Positioning and boundaries: `agent_background`, `agent_core_value`,
+  `agent_role`, `agent_core_goals`, `agent_included_capabilities`,
+  `agent_excluded_capabilities`, `agent_behavior_constraints`.
+- Harness and code boundaries: `agent_loop_responsibilities`,
+  `agent_prompt_builder_responsibilities`, `agent_tools_responsibilities`,
+  `agent_services_repositories_responsibilities`,
+  `agent_storage_external_api_responsibilities`, `agent_core_files_table_rows`.
+- Tools and contracts: `agent_tool_table_rows`, `agent_tool_contract_name`,
+  `agent_tool_contract_responsibility`, `agent_tool_input_json_fields`,
+  `agent_tool_output_json_fields`, `agent_tool_side_effects`,
+  `agent_tool_failure_handling`.
+- Context and memory: `agent_runtime_context_sources`,
+  `agent_long_term_memory_sources`, `agent_memory_exclusions`,
+  `agent_context_trimming_rules`.
+- Workflows and data: `agent_core_workflow_name`,
+  `agent_core_workflow_steps`, `agent_core_workflow_success_conditions`,
+  `agent_core_workflow_failure_conditions`,
+  `agent_core_workflow_user_feedback`, `agent_data_model_name`,
+  `agent_data_model_table_rows`, `agent_data_constraints`.
+- Failure and testing: `agent_failure_mode_table_rows`,
+  `agent_degradation_principles`, `agent_unit_tests`,
+  `agent_integration_tests`, `agent_regression_tests`,
+  `agent_acceptance_checklist`.
 
 ## Agent Project Rules
 

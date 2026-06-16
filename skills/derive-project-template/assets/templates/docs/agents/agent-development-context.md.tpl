@@ -24,48 +24,58 @@ last_updated: "{{last_updated}}"
 ---
 
 ## 1. Agent 定位与能力边界
+<!-- TEMPLATE-INSTRUCTION:
+Extract the Agent background, value, role, goals, capabilities, exclusions, and behavior constraints from provided context.
+If a field cannot be extracted, render its configured missing-value fallback.
+Do not invent role boundaries, capabilities, or behavior constraints.
+-->
 
 - **背景**:
-  _Not provided._
+  {{agent_background}}
 
 - **核心价值**:
-  _Not provided._
+  {{agent_core_value}}
 
 - **Agent 角色**:
-  _Not provided._
+  {{agent_role}}
 
 - **核心目标**:
-  1. _Not provided._
+  {{agent_core_goals}}
 
 - **包含能力**:
-  1. _Not provided._
+  {{agent_included_capabilities}}
 
 - **不包含能力**:
-  1. _Not provided._
+  {{agent_excluded_capabilities}}
 
 - **行为约束**:
-  1. _Not provided._
+  {{agent_behavior_constraints}}
 
 ---
 
 ## 2. Harness 架构与代码边界
+<!-- TEMPLATE-INSTRUCTION:
+Extract the Agent Harness layers, responsibility boundaries, and core files from provided context.
+Keep fixed forbidden-boundary rules unless project-specific context explicitly tightens them.
+Do not invent implementation files, repositories, services, or external dependencies.
+-->
 
 > 本节说明 Agent Harness 的组成，以及各层职责边界。
 
 - **Agent Loop 职责**:
-  - _Not provided._
+  {{agent_loop_responsibilities}}
 
 - **Prompt Builder 职责**:
-  - _Not provided._
+  {{agent_prompt_builder_responsibilities}}
 
 - **Tools 职责**:
-  - _Not provided._
+  {{agent_tools_responsibilities}}
 
 - **Services / Repositories 职责**:
-  - _Not provided._
+  {{agent_services_repositories_responsibilities}}
 
 - **Storage / External API 职责**:
-  - _Not provided._
+  {{agent_storage_external_api_responsibilities}}
 
 - **禁止绕过的边界**:
   1. Agent Loop 不得直接操作数据库或文件系统。
@@ -77,30 +87,35 @@ last_updated: "{{last_updated}}"
 
 | 路径 | 职责 |
 |---|---|
-| _Not provided._ | _Not provided._ |
+{{agent_core_files_table_rows}}
 
 ---
 
 ## 3. 可调用工具与工具契约
+<!-- TEMPLATE-INSTRUCTION:
+Extract declared callable tools and tool contracts from provided context.
+Table row fields must include Markdown table rows only. JSON field placeholders must include JSON object fields only, without outer braces.
+Do not invent tools, side effects, confirmation rules, inputs, or outputs.
+-->
 
 ### 3.1 工具列表
 
 | 工具名 | 工具职责 | 调用时机 | 是否有副作用 | 是否需要确认 |
 |---|---|---|---|---|
-| _Not provided._ | _Not provided._ | _Not provided._ | _Not provided._ | _Not provided._ |
+{{agent_tool_table_rows}}
 
 ### 3.2 工具契约
 
-#### _Not provided._
+#### {{agent_tool_contract_name}}
 
 - **职责**:
-  _Not provided._
+  {{agent_tool_contract_responsibility}}
 
 - **输入**:
 
 ```json
 {
-  "not_provided": "_Not provided._"
+  {{agent_tool_input_json_fields}}
 }
 ```
 
@@ -108,89 +123,109 @@ last_updated: "{{last_updated}}"
 
 ```json
 {
-  "not_provided": "_Not provided._"
+  {{agent_tool_output_json_fields}}
 }
 ```
 
 - **副作用**:
-  _Not provided._
+  {{agent_tool_side_effects}}
 
 - **失败处理**:
-  _Not provided._
+  {{agent_tool_failure_handling}}
 
 ---
 
 ## 4. 上下文来源与记忆边界
+<!-- TEMPLATE-INSTRUCTION:
+Extract runtime context sources, long-term memory sources, memory exclusions, and context trimming rules from provided context.
+Do not invent memory behavior or persistence sources.
+-->
 
 - **运行时上下文来源**:
-  1. _Not provided._
+  {{agent_runtime_context_sources}}
 
 - **长期记忆来源**:
-  1. _Not provided._
+  {{agent_long_term_memory_sources}}
 
 - **不得作为长期记忆的内容**:
-  1. _Not provided._
+  {{agent_memory_exclusions}}
 
 - **上下文裁剪规则**:
-  1. _Not provided._
+  {{agent_context_trimming_rules}}
 
 ---
 
 ## 5. 核心业务流
+<!-- TEMPLATE-INSTRUCTION:
+Extract core workflows, success conditions, failure conditions, and user-visible feedback from provided context.
+Do not invent workflows or product behavior.
+-->
 
-### 5.1 _Not provided._
+### 5.1 {{agent_core_workflow_name}}
 
-1. _Not provided._
+{{agent_core_workflow_steps}}
 
 - **成功条件**:
-  _Not provided._
+  {{agent_core_workflow_success_conditions}}
 
 - **失败条件**:
-  _Not provided._
+  {{agent_core_workflow_failure_conditions}}
 
 - **用户可见反馈**:
-  _Not provided._
+  {{agent_core_workflow_user_feedback}}
 
 ---
 
 ## 6. 数据模型
+<!-- TEMPLATE-INSTRUCTION:
+Extract declared data models and constraints from provided context.
+Table row fields must include Markdown table rows only. Do not invent schemas or persistence requirements.
+-->
 
-### 6.1 _Not provided._
+### 6.1 {{agent_data_model_name}}
 
 | 字段 | 类型 | 是否必填 | 说明 |
 |---|---|---|---|
-| _Not provided._ | _Not provided._ | _Not provided._ | _Not provided._ |
+{{agent_data_model_table_rows}}
 
 ### 6.2 数据约束
 
-1. _Not provided._
+{{agent_data_constraints}}
 
 ---
 
 ## 7. 失败模式与降级策略
+<!-- TEMPLATE-INSTRUCTION:
+Extract failure modes and degradation principles from provided context.
+Table row fields must include Markdown table rows only. Do not invent operational failure behavior.
+-->
 
 | 失败模式 | 触发条件 | Agent 行为 | 用户反馈 |
 |---|---|---|---|
-| _Not provided._ | _Not provided._ | _Not provided._ | _Not provided._ |
+{{agent_failure_mode_table_rows}}
 
 - **通用降级原则**:
-  1. _Not provided._
+  {{agent_degradation_principles}}
 
 ---
 
 ## 8. 测试要求
+<!-- TEMPLATE-INSTRUCTION:
+Extract unit, integration, regression, and acceptance testing requirements from provided context.
+Do not invent test coverage promises or unsupported verification requirements.
+-->
 
 - **单元测试**:
-  1. _Not provided._
+  {{agent_unit_tests}}
 
 - **集成测试**:
-  1. _Not provided._
+  {{agent_integration_tests}}
 
 - **回归测试**:
-  1. _Not provided._
+  {{agent_regression_tests}}
 
 - **验收清单**:
-  1. _Not provided._
+  {{agent_acceptance_checklist}}
 
 ---
 
@@ -198,4 +233,4 @@ last_updated: "{{last_updated}}"
 
 | 日期 | 变更内容 | 变更原因 | 提交 |
 |---|---|---|---|
-| `{{last_updated}}` | Initial generated agent development context. | Project documentation initialization. | _Not provided._ |
+| `{{last_updated}}` | Initial generated agent development context. | Project documentation initialization. | {{agent_initial_commit}} |
