@@ -72,6 +72,8 @@ def test_generates_docs_without_template_artifacts(tmp_path: Path) -> None:
     assert "TEMPLATE-INSTRUCTION" not in agents + readme
     assert "{{" not in agents + readme
     assert "## Guideline Index" in agents
+    assert "read and follow" in agents
+    assert "给出计划" in agents
     assert "AI-CODING-BEHAVIOR.md" not in agents
     assert "docs/ai-guidelines/COLLABORATION-PROTOCOL.md" in agents
     assert "## Functional Scope And Completeness" in agents

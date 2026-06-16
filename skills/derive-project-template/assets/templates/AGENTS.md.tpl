@@ -1,7 +1,14 @@
 # AGENTS.md
 
 ## Guideline Index
-- `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`: User collaboration protocol, including planning requirements, execution confirmation, branch strategy, merge strategy, and commit preferences.
+
+For planning, local file changes, persistent commands, branch changes, merges,
+and commits, read and follow:
+
+- `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
+
+When the user says "按照规约", "按规约", "给出计划", "先给计划",
+or asks for a plan before execution, read that file completely before responding.
 
 {{agent_development_context_index}}
 ## Project Context
