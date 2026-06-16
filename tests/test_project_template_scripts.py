@@ -140,6 +140,14 @@ def test_generates_agent_context_when_agent_fields_are_provided(tmp_path: Path) 
         agent_chinese_name="个人知识",
         agent_language="Python",
         agent_type="Tool-Using Agent",
+        agent_background="Handles personal knowledge retrieval for saved notes.",
+        agent_core_goals="1. Retrieve relevant notes.\n2. Summarize grounded answers.",
+        agent_tool_table_rows=(
+            "| search_notes | Retrieve notes. | User asks a knowledge question. | No | No |"
+        ),
+        agent_tool_contract_name="search_notes",
+        agent_tool_input_json_fields='"query": "string"',
+        agent_acceptance_checklist="1. Answers cite retrieved sources.",
     )
 
     generated = run_script(INIT_SCRIPT, "--config", str(config), "--output", str(output))
@@ -156,6 +164,11 @@ def test_generates_agent_context_when_agent_fields_are_provided(tmp_path: Path) 
     assert "## Agent Development Context Index" in agents
     assert "docs/agents/personal_knowledge_agent.md" in agents
     assert "# 个人知识 Agent 开发上下文" in agent_content
+    assert "Handles personal knowledge retrieval for saved notes." in agent_content
+    assert "search_notes" in agent_content
+    assert '"query": "string"' in agent_content
+    assert "Answers cite retrieved sources." in agent_content
+    assert "TEMPLATE-INSTRUCTION" not in agent_content
     assert "{{" not in agent_content
 
     validation = run_script(VALIDATE_SCRIPT, "--path", str(output))
