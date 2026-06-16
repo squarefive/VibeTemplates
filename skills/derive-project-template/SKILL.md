@@ -57,14 +57,15 @@ Include only stable project facts and project-specific agent rules:
 
 Do not add a current-goal section.
 
-Do include a fixed guideline index that links to and briefly describes:
-
-- `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
+Do include a fixed guideline index that links to
+`docs/ai-guidelines/COLLABORATION-PROTOCOL.md` and explains when to read it,
+including planning, local file changes, persistent commands, branch changes,
+merges, and commits.
 
 When an Agent development context is generated, also include an Agent
 development context index linking to the generated `docs/agents/<agent>.md`.
 
-Do not put general AI behavior rules or user collaboration protocol rules directly in `AGENTS.md`. General AI coding behavior rules belong in `.agents/skills/karpathy-guidelines/SKILL.md`; collaboration protocol rules belong in `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`.
+Do not put general AI behavior rules or copy the full user collaboration protocol directly into `AGENTS.md`. General AI coding behavior rules belong in `.agents/skills/karpathy-guidelines/SKILL.md`; collaboration protocol rules belong in `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`.
 
 ### `README.md`
 
