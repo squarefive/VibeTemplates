@@ -41,6 +41,66 @@ adding local Codex MCP configuration.
 
 Ask a follow-up question only when the user explicitly requests complete documentation and the missing information blocks generation.
 
+## Execution Order
+
+Use this order when initializing project documentation from this skill. The
+goal is to produce documentation that reflects only the user's request and
+observable target repository facts.
+
+1. Read the current user request, the target repository's existing
+   documentation, and the target repository structure before preparing the
+   config. Treat the current user request as the highest-priority source when
+   sources conflict.
+2. Extract project facts into the config fields below. A fact is extractable
+   only when it is stated by the user, already present in repository files, or
+   directly observable from repository structure.
+3. Fill every missing or uncertain field with `_Not provided._`. Do not leave
+   empty strings, unresolved placeholders, guessed commands, guessed modules, or
+   guessed Agent behavior.
+4. Run `scripts/init_project_docs.py` with the prepared config and target output
+   path. Do not overwrite existing target files unless the user explicitly asks
+   for overwrite behavior.
+5. Run `scripts/validate_project_docs.py` against the target output path. If
+   validation fails, report the validation errors instead of claiming
+   initialization is complete.
+6. Report the generated files, skipped files, missing fields, validation result,
+   and any explicit assumptions or conflicts found during extraction.
+
+## Extraction Boundaries
+
+Treat information as extractable only when it appears in the user's prompt,
+existing repository files, or directly observable project structure.
+
+Do not infer:
+
+- business goals from package names
+- development commands from language alone
+- module responsibilities from empty directories
+- Agent tools, permissions, workflows, memory, or data models unless stated
+
+If information is plausible but not stated, use `_Not provided._`.
+
+## Completion Report
+
+After validation, report using this format:
+
+```markdown
+Generated:
+- ...
+
+Skipped:
+- ...
+
+Missing Fields:
+- ...
+
+Validation:
+- passed / failed
+
+Notes:
+- ...
+```
+
 ## Output Responsibilities
 
 ### `AGENTS.md`
