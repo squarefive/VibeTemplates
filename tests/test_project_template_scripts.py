@@ -18,6 +18,13 @@ TEMPLATE_KARPATHY_SKILL = (
     / "karpathy-guidelines"
     / "SKILL.md"
 )
+BUNDLED_VSCODE_TRANSLATION_VSIX = (
+    SKILL
+    / "assets"
+    / "tools"
+    / "vscode"
+    / "markdown-chinese-preview-translator-0.0.1.vsix"
+)
 
 
 def run_script(script: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -69,15 +76,23 @@ def test_generates_docs_without_template_artifacts(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     agents = (output / "AGENTS.md").read_text(encoding="utf-8")
     readme = (output / "README.md").read_text(encoding="utf-8")
-    assert "TEMPLATE-INSTRUCTION" not in agents + readme
-    assert "{{" not in agents + readme
+    codebase_map = (output / "docs" / "architecture" / "codebase-map.md").read_text(
+        encoding="utf-8"
+    )
+    assert "TEMPLATE-INSTRUCTION" not in agents + readme + codebase_map
+    assert "{{" not in agents + readme + codebase_map
     assert "## Guideline Index" in agents
+    assert "## Codebase Map" in agents
     assert "read and follow" in agents
     assert "给出计划" in agents
     assert "AI-CODING-BEHAVIOR.md" not in agents
     assert "docs/ai-guidelines/COLLABORATION-PROTOCOL.md" in agents
+    assert "docs/architecture/codebase-map.md" in agents
     assert "## Functional Scope And Completeness" in agents
     assert "A template-derived documentation project." in agents
+    assert "## 目录说明" in codebase_map
+    assert "## 文件说明" in codebase_map
+    assert (output / "scripts" / "check-codebase-map-format.py").exists()
     assert not (output / "docs" / "ai-guidelines" / "AI-CODING-BEHAVIOR.md").exists()
     assert (
         output / "docs" / "ai-guidelines" / "COLLABORATION-PROTOCOL.md"
@@ -121,6 +136,11 @@ def test_bundled_karpathy_guidelines_matches_repo_skill() -> None:
     assert TEMPLATE_KARPATHY_SKILL.read_text(
         encoding="utf-8"
     ) == REPO_KARPATHY_SKILL.read_text(encoding="utf-8")
+
+
+def test_bundled_vscode_translation_vsix_exists() -> None:
+    assert BUNDLED_VSCODE_TRANSLATION_VSIX.exists()
+    assert BUNDLED_VSCODE_TRANSLATION_VSIX.stat().st_size > 0
 
 
 def test_skill_mentions_code_readability_mcp_configuration() -> None:
@@ -198,6 +218,35 @@ def test_validator_rejects_missing_required_section(tmp_path: Path) -> None:
     (guideline_dir / "COLLABORATION-PROTOCOL.md").write_text(
         "Collaboration guidance", encoding="utf-8"
     )
+    codebase_map = output / "docs" / "architecture" / "codebase-map.md"
+    codebase_map.parent.mkdir(parents=True)
+    codebase_map.write_text(
+        "---\n"
+        "title: \"SampleProject 代码地图\"\n"
+        "last_updated: \"2026-06-19\"\n"
+        "---\n\n"
+        "# SampleProject 代码地图\n\n"
+        "## 目录说明\n\n"
+        "| 目录 | 作用 |\n"
+        "|---|---|\n"
+        "| `_Not provided._` | _Not provided._ |\n\n"
+        "## 文件说明\n\n"
+        "### _Not provided._\n\n"
+        "模块目录：`_Not provided._`\n\n"
+        "模块作用：_Not provided._\n\n"
+        "| 文件 | 作用 |\n"
+        "|---|---|\n"
+        "| `_Not provided._` | _Not provided._ |\n",
+        encoding="utf-8",
+    )
+    codebase_checker = output / "scripts" / "check-codebase-map-format.py"
+    codebase_checker.parent.mkdir(parents=True)
+    codebase_checker.write_text(
+        (SKILL / "assets" / "templates" / "scripts" / "check-codebase-map-format.py").read_text(
+            encoding="utf-8"
+        ),
+        encoding="utf-8",
+    )
     karpathy_skill = output / ".agents" / "skills" / "karpathy-guidelines" / "SKILL.md"
     karpathy_skill.parent.mkdir(parents=True)
     karpathy_skill.write_text("Karpathy guidance", encoding="utf-8")
@@ -206,3 +255,20 @@ def test_validator_rejects_missing_required_section(tmp_path: Path) -> None:
 
     assert result.returncode != 0
     assert "Functional Scope And Completeness" in result.stdout
+
+
+def test_validator_rejects_invalid_codebase_map(tmp_path: Path) -> None:
+    config = tmp_path / "project.json"
+    output = tmp_path / "out"
+    write_config(config)
+    generated = run_script(INIT_SCRIPT, "--config", str(config), "--output", str(output))
+    assert generated.returncode == 0, generated.stderr
+
+    codebase_map = output / "docs" / "architecture" / "codebase-map.md"
+    codebase_map.write_text("# SampleProject 代码地图\n", encoding="utf-8")
+
+    result = run_script(VALIDATE_SCRIPT, "--path", str(output))
+
+    assert result.returncode != 0
+    assert "Codebase map format check failed" in result.stdout
+    assert "missing YAML frontmatter" in result.stdout

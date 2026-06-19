@@ -22,6 +22,23 @@ REQUIRED_FIELDS = {
     "project_specific_agent_rules",
 }
 
+OPTIONAL_CODEBASE_MAP_FIELDS = {
+    "codebase_map_directory_rows",
+    "codebase_map_module_sections",
+}
+
+OPTIONAL_CODEBASE_MAP_FIELD_DEFAULTS = {
+    "codebase_map_directory_rows": "| `_Not provided._` | _Not provided._ |",
+    "codebase_map_module_sections": (
+        "### _Not provided._\n\n"
+        "模块目录：`_Not provided._`\n\n"
+        "模块作用：_Not provided._\n\n"
+        "| 文件 | 作用 |\n"
+        "|---|---|\n"
+        "| `_Not provided._` | _Not provided._ |"
+    ),
+}
+
 OPTIONAL_AGENT_FIELDS = {
     "agent_module_name",
     "agent_chinese_name",
@@ -137,8 +154,13 @@ def load_config(config_path: Path) -> dict[str, str]:
         raise ValueError(f"Missing required config fields: {', '.join(missing)}")
 
     normalized = {}
-    for key in REQUIRED_FIELDS | OPTIONAL_AGENT_FIELDS:
-        default = OPTIONAL_AGENT_FIELD_DEFAULTS.get(key, "_Not provided._")
+    optional_fields = OPTIONAL_AGENT_FIELDS | OPTIONAL_CODEBASE_MAP_FIELDS
+    optional_defaults = {
+        **OPTIONAL_AGENT_FIELD_DEFAULTS,
+        **OPTIONAL_CODEBASE_MAP_FIELD_DEFAULTS,
+    }
+    for key in REQUIRED_FIELDS | optional_fields:
+        default = optional_defaults.get(key, "_Not provided._")
         value = data.get(key, default)
         if value is None or value == "":
             value = default
@@ -222,6 +244,7 @@ def generate(config: dict[str, str], output: Path, overwrite: bool) -> dict[str,
     template_targets = {
         "AGENTS.md.tpl": "AGENTS.md",
         "README.md.tpl": "README.md",
+        "docs/architecture/codebase-map.md.tpl": "docs/architecture/codebase-map.md",
     }
     for template_name, target_name in template_targets.items():
         template = (TEMPLATE_ROOT / template_name).read_text(encoding="utf-8")
@@ -239,6 +262,14 @@ def generate(config: dict[str, str], output: Path, overwrite: bool) -> dict[str,
     karpathy_skill = ".agents/skills/karpathy-guidelines/SKILL.md"
     status = copy_file(TEMPLATE_ROOT / karpathy_skill, output / karpathy_skill, overwrite)
     results[status].append(karpathy_skill)
+
+    codebase_map_checker = "scripts/check-codebase-map-format.py"
+    status = copy_file(
+        TEMPLATE_ROOT / codebase_map_checker,
+        output / codebase_map_checker,
+        overwrite,
+    )
+    results[status].append(codebase_map_checker)
 
     if agent_project_enabled(config):
         agent_template = (
