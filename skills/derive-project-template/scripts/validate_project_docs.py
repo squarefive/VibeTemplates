@@ -8,13 +8,16 @@ from pathlib import Path
 REQUIRED_FILES = [
     Path("AGENTS.md"),
     Path("README.md"),
+    Path("docs/architecture/codebase-map.md"),
     Path("docs/ai-guidelines/COLLABORATION-PROTOCOL.md"),
     Path(".agents/skills/karpathy-guidelines/SKILL.md"),
+    Path("scripts/check-codebase-map-format.py"),
 ]
 
 REQUIRED_AGENTS_SECTIONS = [
     "# AGENTS.md",
     "## Guideline Index",
+    "## Codebase Map",
     "## Project Context",
     "## Functional Scope And Completeness",
     "## Module Map",
@@ -34,10 +37,12 @@ PLACEHOLDER_RE = re.compile(r"{{[^}]+}}")
 
 REQUIRED_GUIDELINE_LINKS = [
     "docs/ai-guidelines/COLLABORATION-PROTOCOL.md",
+    "docs/architecture/codebase-map.md",
 ]
 
 AGENT_INDEX_SECTION = "## Agent Development Context Index"
 AGENT_CHECKER = Path("scripts/check-agent-doc-format.py")
+CODEBASE_MAP_CHECKER = Path("scripts/check-codebase-map-format.py")
 
 
 def parse_args() -> argparse.Namespace:
@@ -84,6 +89,21 @@ def collect_errors(root: Path) -> list[str]:
             errors.append(f"{relative} contains TEMPLATE-INSTRUCTION")
         if PLACEHOLDER_RE.search(content):
             errors.append(f"{relative} contains unresolved placeholder")
+
+    codebase_checker = root / CODEBASE_MAP_CHECKER
+    result = subprocess.run(
+        [sys.executable, str(codebase_checker)],
+        cwd=root,
+        text=True,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        details = "\n".join(
+            line
+            for line in (result.stdout + result.stderr).splitlines()
+            if line.strip()
+        )
+        errors.append(f"Codebase map format check failed:\n{details}")
 
     agent_docs = sorted((root / "docs" / "agents").glob("*.md"))
     if agent_docs:

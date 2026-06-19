@@ -12,10 +12,34 @@ For a normal project, the skill generates:
 
 - `AGENTS.md`
 - `README.md`
+- `docs/architecture/codebase-map.md`
 - `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
 - `.agents/skills/karpathy-guidelines/SKILL.md`
+- `scripts/check-codebase-map-format.py`
 
 The generated `karpathy-guidelines` skill provides general AI coding behavior rules for Codex. This repository also includes the same skill under `.agents/skills/karpathy-guidelines/SKILL.md`.
+
+The generated codebase map gives AI coding tools a stable entry point for
+source directories, modules, and file responsibilities. The generated checker
+validates the map format after documentation or source structure changes.
+
+## Optional VS Code Markdown Translation Extension
+
+The `derive-project-template` skill bundles an optional local VS Code Markdown
+translation extension artifact under:
+
+```text
+skills/derive-project-template/assets/tools/vscode/
+```
+
+When the skill runs locally and the VS Code `code` CLI is available, Codex can
+install the bundled VSIX if the extension is not already installed. The skill
+does not rebuild the extension, run `npm install`, or download extension assets.
+
+After installation, configure the LLM provider in VS Code Settings with
+`mdTranslate.baseUrl`, `mdTranslate.apiKey`, `mdTranslate.model`,
+`mdTranslate.targetLanguage`, `mdTranslate.maxSectionChars`, and
+`mdTranslate.enableCache`.
 
 ## Code Readability MCP
 

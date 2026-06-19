@@ -11,8 +11,10 @@ This skill generates:
 
 - `AGENTS.md`
 - `README.md`
+- `docs/architecture/codebase-map.md`
 - `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
 - `.agents/skills/karpathy-guidelines/SKILL.md`
+- `scripts/check-codebase-map-format.py`
 
 Core rule:
 
@@ -26,9 +28,12 @@ Extract first. Do not invent. Do not ask by default. Leave missing information e
 2. Do not ask follow-up questions by default.
 3. If a field cannot be extracted, set it to `_Not provided._`.
 4. Convert extracted information into the JSON config fields below.
-5. Run `scripts/init_project_docs.py`.
-6. Run `scripts/validate_project_docs.py`.
-7. Inspect validation output before reporting completion.
+5. Check whether the optional bundled VS Code Markdown translation extension is
+   installed, and install the bundled VSIX when the local VS Code CLI is
+   available.
+6. Run `scripts/init_project_docs.py`.
+7. Run `scripts/validate_project_docs.py`.
+8. Inspect validation output before reporting completion.
 
 When the target project is an Agent development project, also generate an Agent
 development context document and validate it with the generated Agent doc
@@ -40,6 +45,34 @@ that this repository provides `tools/code-readability-mcp` and ask before
 adding local Codex MCP configuration.
 
 Ask a follow-up question only when the user explicitly requests complete documentation and the missing information blocks generation.
+
+## Optional VS Code Markdown Translation Extension
+
+This skill bundles an optional local VS Code Markdown translation extension
+artifact at:
+
+`assets/tools/vscode/markdown-chinese-preview-translator-0.0.1.vsix`
+
+When running this skill locally, check whether the extension is already
+installed. If it is not installed and the bundled VSIX exists, install it with
+the local VS Code `code` CLI.
+
+Do not run `npm install`, rebuild the extension, or download extension assets
+during this skill.
+
+If the extension is installed or successfully installed, tell the user to
+configure the LLM provider in VS Code Settings with these keys:
+
+- `mdTranslate.baseUrl`
+- `mdTranslate.apiKey`
+- `mdTranslate.model`
+- `mdTranslate.targetLanguage`
+- `mdTranslate.maxSectionChars`
+- `mdTranslate.enableCache`
+
+If the VS Code CLI or bundled VSIX is unavailable, continue the project
+documentation initialization and report that the optional extension was not
+installed.
 
 ## Execution Order
 
@@ -57,13 +90,16 @@ observable target repository facts.
 3. Fill every missing or uncertain field with `_Not provided._`. Do not leave
    empty strings, unresolved placeholders, guessed commands, guessed modules, or
    guessed Agent behavior.
-4. Run `scripts/init_project_docs.py` with the prepared config and target output
+4. Check whether the optional bundled VS Code Markdown translation extension is
+   installed. If not installed, install the bundled VSIX only when the local
+   `code` CLI is available.
+5. Run `scripts/init_project_docs.py` with the prepared config and target output
    path. Do not overwrite existing target files unless the user explicitly asks
    for overwrite behavior.
-5. Run `scripts/validate_project_docs.py` against the target output path. If
+6. Run `scripts/validate_project_docs.py` against the target output path. If
    validation fails, report the validation errors instead of claiming
    initialization is complete.
-6. Report the generated files, skipped files, missing fields, validation result,
+7. Report the generated files, skipped files, missing fields, validation result,
    and any explicit assumptions or conflicts found during extraction.
 
 ## Extraction Boundaries
@@ -141,6 +177,34 @@ Include:
 
 Do not turn `README.md` into an agent rule file.
 
+### `docs/architecture/codebase-map.md`
+
+AI-facing code navigation document.
+
+Describe the current source directory structure, major modules, and file
+responsibilities. This file helps AI coding tools decide where to read, add,
+move, or modify source files.
+
+Do not define Agent capability boundaries here. Agent capability boundaries
+belong in `docs/agents/<agent_module_name>.md` when an Agent development
+context exists.
+
+Do not invent module responsibilities. Fill uncertain responsibilities with
+`_Not provided._`.
+
+### `scripts/check-codebase-map-format.py`
+
+Codebase map format checker.
+
+Copy this file during generation. The validator must use it to check
+`docs/architecture/codebase-map.md`.
+
+After changing the codebase map, run:
+
+```bash
+python3 scripts/check-codebase-map-format.py
+```
+
 ### `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
 
 User collaboration protocol.
@@ -196,6 +260,8 @@ Prepare this JSON shape before generation:
   "project_structure": "",
   "getting_started": "",
   "development": "",
+  "codebase_map_directory_rows": "",
+  "codebase_map_module_sections": "",
   "functional_scope_section": "",
   "module_map_section": "",
   "project_specific_agent_rules": "",
@@ -303,6 +369,43 @@ Use a table when any module information is available:
 ```
 
 Use `_Not provided._` when no module information is extractable.
+
+### `codebase_map_directory_rows`
+
+List current source and documentation directories when the repository structure
+is observable.
+
+Use Markdown table rows only:
+
+```markdown
+| `src/example/` | _Not provided._ |
+```
+
+Use `_Not provided._` for directory responsibilities that are not stated or
+directly observable.
+
+### `codebase_map_module_sections`
+
+Describe current modules and file responsibilities when they are stated in
+existing repository docs or directly observable from file names and nearby
+context.
+
+Use this structure for each module:
+
+```markdown
+### <module name>
+
+模块目录：`<module dir>`
+
+模块作用：<module responsibility or _Not provided._>
+
+| 文件 | 作用 |
+|---|---|
+| `<file path>` | <file responsibility or _Not provided._> |
+```
+
+Use a single `_Not provided._` module block when no code structure is
+extractable.
 
 ### `project_specific_agent_rules`
 

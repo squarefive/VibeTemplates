@@ -10,6 +10,22 @@ and commits, read and follow:
 When the user says "按照规约", "按规约", "给出计划", "先给计划",
 or asks for a plan before execution, read that file completely before responding.
 
+## Codebase Map
+
+For code navigation, module responsibility checks, file placement decisions,
+and source structure changes, read and follow:
+
+- `docs/architecture/codebase-map.md`
+
+When adding, moving, deleting, or substantially changing source files, update
+the codebase map so it continues to reflect the repository structure.
+
+After changing the codebase map, run:
+
+```bash
+python3 scripts/check-codebase-map-format.py
+```
+
 {{agent_development_context_index}}
 ## Project Context
 <!-- TEMPLATE-INSTRUCTION:
