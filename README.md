@@ -89,6 +89,17 @@ python3 skills/derive-project-template/scripts/init_project_docs.py --config con
 python3 skills/derive-project-template/scripts/validate_project_docs.py --path /path/to/target-project
 ```
 
+Audit an existing project without modifying files:
+
+```bash
+python3 skills/derive-project-template/scripts/audit_project_docs.py --path /path/to/target-project
+```
+
+The audit report checks whether required documents exist, whether existing
+documents match the expected content architecture, and which incremental updates
+would bring the project back into compliance. It does not overwrite or
+regenerate files.
+
 Field rules and generation details live in `skills/derive-project-template/SKILL.md`.
 
 ## Development

@@ -1,11 +1,30 @@
 ---
 name: derive-project-template
-description: Use when deriving project documentation from a project template, initializing AGENTS.md, README.md, or AI collaboration guidance from user-provided context
+description: Use when initializing project documentation or auditing an existing repository for compliance with VibeTemplates docs, AGENTS.md guidance, codebase maps, design principles, and incremental update needs
 ---
 
 # Derive Project Template
 
 Use this skill to derive a minimal, structured project documentation set from the user's existing context, prompt, or provided project notes.
+
+This skill also audits existing repositories against the VibeTemplates
+documentation structure and reports incremental update needs without modifying
+files.
+
+## Supported Scenarios
+
+### Initialize Project Documentation
+
+Use when target docs are missing or the user asks to initialize project
+documentation.
+
+### Audit Existing Project Documentation
+
+Use when the user asks whether an existing repository conforms to this skill,
+partially conforms, or needs updates.
+
+Audit mode must not modify files. Audit mode must report incremental update
+suggestions only.
 
 This skill generates:
 
@@ -136,6 +155,64 @@ Validation:
 
 Notes:
 - ...
+```
+
+## Audit Order
+
+Audit mode checks whether an existing repository conforms to this skill's
+generated documentation structure. It must not modify files.
+
+Use this order:
+
+1. Check whether required documents and scripts exist.
+2. For existing files, check whether their content architecture matches the
+   current template structure. Check sections, required links, frontmatter,
+   unresolved placeholders, and checker results. Do not require exact text
+   equality.
+3. Report using the fixed audit report format.
+
+Do not run generation scripts or overwrite files during audit mode unless the
+user explicitly asks to apply fixes.
+
+Audit recommendations must be incremental. Do not recommend replacing existing
+documents when smaller additive changes can bring the repository back into
+compliance.
+
+### Fixed Audit Report Format
+
+```markdown
+# Project Documentation Audit
+
+Path: <target-path>
+
+Audit Result:
+- status: ok | partial | failed
+
+Existing:
+- ...
+
+Missing:
+- ...
+
+Structure Mismatches:
+- ...
+
+Invalid:
+- ...
+
+Manual Review:
+- ...
+
+Incremental Update Scope:
+
+Add:
+- ...
+
+Modify:
+- ...
+
+Delete:
+- None
 ```
 
 ## Output Responsibilities
