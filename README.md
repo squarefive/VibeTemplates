@@ -13,6 +13,7 @@ For a normal project, the skill generates:
 - `AGENTS.md`
 - `README.md`
 - `docs/architecture/codebase-map.md`
+- `docs/engineering-guidelines/DESIGN-PRINCIPLES.md`
 - `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
 - `.agents/skills/karpathy-guidelines/SKILL.md`
 - `scripts/check-codebase-map-format.py`
@@ -22,6 +23,10 @@ The generated `karpathy-guidelines` skill provides general AI coding behavior ru
 The generated codebase map gives AI coding tools a stable entry point for
 source directories, modules, and file responsibilities. The generated checker
 validates the map format after documentation or source structure changes.
+
+The generated design principles document gives AI coding agents stable software
+design constraints for module boundaries, dependency direction, layering, and
+abstraction decisions.
 
 ## Optional VS Code Markdown Translation Extension
 

@@ -253,6 +253,7 @@ def generate(config: dict[str, str], output: Path, overwrite: bool) -> dict[str,
         results[status].append(target_name)
 
     guideline_targets = [
+        "docs/engineering-guidelines/DESIGN-PRINCIPLES.md",
         "docs/ai-guidelines/COLLABORATION-PROTOCOL.md",
     ]
     for relative in guideline_targets:

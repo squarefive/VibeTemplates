@@ -9,6 +9,7 @@ REQUIRED_FILES = [
     Path("AGENTS.md"),
     Path("README.md"),
     Path("docs/architecture/codebase-map.md"),
+    Path("docs/engineering-guidelines/DESIGN-PRINCIPLES.md"),
     Path("docs/ai-guidelines/COLLABORATION-PROTOCOL.md"),
     Path(".agents/skills/karpathy-guidelines/SKILL.md"),
     Path("scripts/check-codebase-map-format.py"),
@@ -16,8 +17,8 @@ REQUIRED_FILES = [
 
 REQUIRED_AGENTS_SECTIONS = [
     "# AGENTS.md",
-    "## Guideline Index",
-    "## Codebase Map",
+    "## AGENTS.md Role",
+    "## Context Loading Rules",
     "## Project Context",
     "## Functional Scope And Completeness",
     "## Module Map",
@@ -37,6 +38,7 @@ PLACEHOLDER_RE = re.compile(r"{{[^}]+}}")
 
 REQUIRED_GUIDELINE_LINKS = [
     "docs/ai-guidelines/COLLABORATION-PROTOCOL.md",
+    "docs/engineering-guidelines/DESIGN-PRINCIPLES.md",
     "docs/architecture/codebase-map.md",
 ]
 

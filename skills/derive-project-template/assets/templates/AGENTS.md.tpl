@@ -1,24 +1,32 @@
 # AGENTS.md
 
-## Guideline Index
+## AGENTS.md Role
 
-For planning, local file changes, persistent commands, branch changes, merges,
-and commits, read and follow:
+This file provides durable project guidance for AI coding agents before they
+start work in this repository.
 
-- `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
+Keep it small. Include only guidance that changes AI development decisions,
+such as project purpose, functional scope, module boundaries, required reading
+rules, build and test commands, and repository-specific constraints.
 
-When the user says "按照规约", "按规约", "给出计划", "先给计划",
-or asks for a plan before execution, read that file completely before responding.
+Do not use this file as a full documentation dump. Long-form protocols, design
+rules, code maps, Agent context, and detailed implementation notes belong in
+dedicated documents linked from this file.
 
-## Codebase Map
+## Context Loading Rules
 
-For code navigation, module responsibility checks, file placement decisions,
-and source structure changes, read and follow:
+Read `docs/ai-guidelines/COLLABORATION-PROTOCOL.md` before planning, local file
+changes, persistent commands, branch changes, merges, or commits.
 
-- `docs/architecture/codebase-map.md`
+Read `docs/engineering-guidelines/DESIGN-PRINCIPLES.md` before adding modules,
+changing dependencies, introducing abstractions, changing layer boundaries, or
+making architecture-level decisions.
 
-When adding, moving, deleting, or substantially changing source files, update
-the codebase map so it continues to reflect the repository structure.
+Read `docs/architecture/codebase-map.md` before code navigation, file placement,
+module responsibility checks, or source structure changes.
+
+Read `docs/agents/<agent>.md` before implementing, modifying, or refactoring a
+specific Agent.
 
 After changing the codebase map, run:
 
