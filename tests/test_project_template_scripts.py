@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "derive-project-template"
 INIT_SCRIPT = SKILL / "scripts" / "init_project_docs.py"
 VALIDATE_SCRIPT = SKILL / "scripts" / "validate_project_docs.py"
+AUDIT_SCRIPT = SKILL / "scripts" / "audit_project_docs.py"
 REPO_KARPATHY_SKILL = ROOT / ".agents" / "skills" / "karpathy-guidelines" / "SKILL.md"
 TEMPLATE_KARPATHY_SKILL = (
     SKILL
@@ -133,6 +134,90 @@ def test_validator_accepts_generated_structure(tmp_path: Path) -> None:
 
     assert result.returncode == 0, result.stdout + result.stderr
     assert "validation passed" in result.stdout.lower()
+
+
+def test_audit_accepts_generated_structure(tmp_path: Path) -> None:
+    config = tmp_path / "project.json"
+    output = tmp_path / "out"
+    write_config(config)
+    generated = run_script(INIT_SCRIPT, "--config", str(config), "--output", str(output))
+    assert generated.returncode == 0, generated.stderr
+
+    result = run_script(AUDIT_SCRIPT, "--path", str(output))
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "- status: ok" in result.stdout
+    assert "Incremental Update Scope" in result.stdout
+    assert "Replace" not in result.stdout
+
+
+def test_audit_reports_missing_design_principles_incrementally(tmp_path: Path) -> None:
+    config = tmp_path / "project.json"
+    output = tmp_path / "out"
+    write_config(config)
+    generated = run_script(INIT_SCRIPT, "--config", str(config), "--output", str(output))
+    assert generated.returncode == 0, generated.stderr
+    (output / "docs" / "engineering-guidelines" / "DESIGN-PRINCIPLES.md").unlink()
+
+    result = run_script(AUDIT_SCRIPT, "--path", str(output))
+
+    assert result.returncode == 1
+    assert "Missing:" in result.stdout
+    assert "docs/engineering-guidelines/DESIGN-PRINCIPLES.md" in result.stdout
+    assert "Add:" in result.stdout
+    assert "Replace" not in result.stdout
+
+
+def test_audit_reports_outdated_agents_structure_incrementally(tmp_path: Path) -> None:
+    config = tmp_path / "project.json"
+    output = tmp_path / "out"
+    write_config(config)
+    generated = run_script(INIT_SCRIPT, "--config", str(config), "--output", str(output))
+    assert generated.returncode == 0, generated.stderr
+    agents = output / "AGENTS.md"
+    agents.write_text(
+        agents.read_text(encoding="utf-8").replace("## Context Loading Rules", "## Old Rules"),
+        encoding="utf-8",
+    )
+
+    result = run_script(AUDIT_SCRIPT, "--path", str(output))
+
+    assert result.returncode == 1
+    assert "Structure Mismatches:" in result.stdout
+    assert "Missing section: `## Context Loading Rules`" in result.stdout
+    assert "Modify:" in result.stdout
+    assert "preserving existing project context" in result.stdout
+    assert "Replace" not in result.stdout
+
+
+def test_audit_reports_invalid_codebase_map(tmp_path: Path) -> None:
+    config = tmp_path / "project.json"
+    output = tmp_path / "out"
+    write_config(config)
+    generated = run_script(INIT_SCRIPT, "--config", str(config), "--output", str(output))
+    assert generated.returncode == 0, generated.stderr
+    (output / "docs" / "architecture" / "codebase-map.md").write_text(
+        "# SampleProject 代码地图\n", encoding="utf-8"
+    )
+
+    result = run_script(AUDIT_SCRIPT, "--path", str(output))
+
+    assert result.returncode == 1
+    assert "Invalid:" in result.stdout
+    assert "Codebase map checker failed" in result.stdout
+    assert "Modify:" in result.stdout
+    assert "Replace" not in result.stdout
+
+
+def test_audit_reports_failed_for_missing_path(tmp_path: Path) -> None:
+    missing = tmp_path / "missing"
+
+    result = run_script(AUDIT_SCRIPT, "--path", str(missing))
+
+    assert result.returncode == 2
+    assert "- status: failed" in result.stdout
+    assert "Audit target path does not exist or is not a directory" in result.stdout
+    assert "Replace" not in result.stdout
 
 
 def test_bundled_karpathy_guidelines_matches_repo_skill() -> None:
