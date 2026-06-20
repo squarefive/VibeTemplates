@@ -12,6 +12,7 @@ This skill generates:
 - `AGENTS.md`
 - `README.md`
 - `docs/architecture/codebase-map.md`
+- `docs/engineering-guidelines/DESIGN-PRINCIPLES.md`
 - `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
 - `.agents/skills/karpathy-guidelines/SKILL.md`
 - `scripts/check-codebase-map-format.py`
@@ -143,9 +144,14 @@ Notes:
 
 Agent-facing project entry file.
 
-Include only stable project facts and project-specific agent rules:
+This file provides durable project guidance and context loading rules for AI
+coding agents before they start work in a repository.
 
-- guideline index
+Include only stable project facts and guidance that changes AI development
+decisions:
+
+- AGENTS.md role
+- context loading rules
 - project context
 - full functional scope and completeness
 - module map
@@ -153,10 +159,16 @@ Include only stable project facts and project-specific agent rules:
 
 Do not add a current-goal section.
 
-Do include a fixed guideline index that links to
-`docs/ai-guidelines/COLLABORATION-PROTOCOL.md` and explains when to read it,
-including planning, local file changes, persistent commands, branch changes,
-merges, and commits.
+Do not use `AGENTS.md` as a full documentation dump. Long-form protocols,
+design rules, code maps, Agent context, and detailed implementation notes belong
+in dedicated documents linked from this file.
+
+Do include fixed context loading rules that explain when to read:
+
+- `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
+- `docs/engineering-guidelines/DESIGN-PRINCIPLES.md`
+- `docs/architecture/codebase-map.md`
+- `docs/agents/<agent>.md` when Agent context is generated
 
 When an Agent development context is generated, also include an Agent
 development context index linking to the generated `docs/agents/<agent>.md`.
@@ -204,6 +216,21 @@ After changing the codebase map, run:
 ```bash
 python3 scripts/check-codebase-map-format.py
 ```
+
+### `docs/engineering-guidelines/DESIGN-PRINCIPLES.md`
+
+AI-facing software design guidance.
+
+Copy this file from the bundled template during generation. Do not rewrite it
+during normal project generation.
+
+This file defines reusable design constraints for module cohesion, dependency
+direction, layer boundaries, abstraction restraint, and architecture-level
+decisions.
+
+Project-specific architecture facts belong in
+`docs/architecture/codebase-map.md` or `AGENTS.md` when they affect AI
+development decisions.
 
 ### `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
 

@@ -79,19 +79,22 @@ def test_generates_docs_without_template_artifacts(tmp_path: Path) -> None:
     codebase_map = (output / "docs" / "architecture" / "codebase-map.md").read_text(
         encoding="utf-8"
     )
-    assert "TEMPLATE-INSTRUCTION" not in agents + readme + codebase_map
-    assert "{{" not in agents + readme + codebase_map
-    assert "## Guideline Index" in agents
-    assert "## Codebase Map" in agents
-    assert "read and follow" in agents
-    assert "给出计划" in agents
+    design_principles = (
+        output / "docs" / "engineering-guidelines" / "DESIGN-PRINCIPLES.md"
+    ).read_text(encoding="utf-8")
+    assert "TEMPLATE-INSTRUCTION" not in agents + readme + codebase_map + design_principles
+    assert "{{" not in agents + readme + codebase_map + design_principles
+    assert "## AGENTS.md Role" in agents
+    assert "## Context Loading Rules" in agents
     assert "AI-CODING-BEHAVIOR.md" not in agents
     assert "docs/ai-guidelines/COLLABORATION-PROTOCOL.md" in agents
+    assert "docs/engineering-guidelines/DESIGN-PRINCIPLES.md" in agents
     assert "docs/architecture/codebase-map.md" in agents
     assert "## Functional Scope And Completeness" in agents
     assert "A template-derived documentation project." in agents
     assert "## 目录说明" in codebase_map
     assert "## 文件说明" in codebase_map
+    assert "## Layering Guidance" in design_principles
     assert (output / "scripts" / "check-codebase-map-format.py").exists()
     assert not (output / "docs" / "ai-guidelines" / "AI-CODING-BEHAVIOR.md").exists()
     assert (
@@ -218,6 +221,11 @@ def test_validator_rejects_missing_required_section(tmp_path: Path) -> None:
     (guideline_dir / "COLLABORATION-PROTOCOL.md").write_text(
         "Collaboration guidance", encoding="utf-8"
     )
+    design_principles = (
+        output / "docs" / "engineering-guidelines" / "DESIGN-PRINCIPLES.md"
+    )
+    design_principles.parent.mkdir(parents=True)
+    design_principles.write_text("Design guidance", encoding="utf-8")
     codebase_map = output / "docs" / "architecture" / "codebase-map.md"
     codebase_map.parent.mkdir(parents=True)
     codebase_map.write_text(
