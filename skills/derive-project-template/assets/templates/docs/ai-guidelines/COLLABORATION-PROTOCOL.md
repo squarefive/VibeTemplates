@@ -54,7 +54,27 @@ For local documentation changes, the implementation plan must explicitly list th
 
 For code changes, list the file scope separately first. If a step includes code changes, provide pseudocode or a logic draft for that step before editing code.
 
-### 1.4 Branch Strategy
+### 1.4 Document Change Details
+
+When a task will add or modify local documentation, the implementation plan must include a section-level change list for each affected document.
+
+For each document, list every section that will be added, modified, preserved, or removed.
+
+Use this format:
+
+```markdown
+Document Change Details:
+
+`path/to/document.md`
+- `## Section Name`: Add / Modify / Preserve / Remove - one-sentence description.
+- `## Another Section`: Modify - one-sentence description.
+```
+
+If the document does not yet exist, list the planned top-level sections to add.
+
+When section-level scope can be determined, do not describe documentation changes only at file level.
+
+### 1.5 Branch Strategy
 
 Planning is part of change control. Before modifying files, confirm the current Git branch and worktree status.
 
@@ -70,7 +90,7 @@ Use a short branch name that describes the task intent, for example `docs/update
 
 If the worktree has uncommitted changes, explain the change state, judge whether it is aligned with the new task, and wait for user confirmation before switching branches or mixing work.
 
-### 1.5 Merge Strategy
+### 1.6 Merge Strategy
 
 When the user asks to merge a task branch into `main` or `master`, keep an explicit merge commit by default:
 

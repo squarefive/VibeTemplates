@@ -12,6 +12,9 @@ last_updated: "{{last_updated}}"
 > 本文档是面向人类开发者和 AI Coding 工具的 Agent 开发上下文文档。
 > 它用于约束该 Agent 的角色定位、能力边界、Harness 架构、可调用工具、上下文来源、核心业务流、数据模型和测试要求。
 > 本文档不是终端用户说明，也不是运行时 Prompt。
+> 本文档只记录该 Agent 可长期维护的设计边界。
+> 本文档不得记录单次任务计划、临时实施步骤、Git 分支安排、工作进度或当前对话待办。
+> 任务计划应按照协作规约在当前对话中单独输出。
 
 > **AI 阅读契约**
 > AI Coding 工具在生成、修改或重构代码时，必须遵守本文档定义的角色边界、工具边界、数据边界和业务流程。
@@ -62,7 +65,7 @@ Do not invent implementation files, repositories, services, or external dependen
 
 > 本节说明 Agent Harness 的组成，以及各层职责边界。
 
-- **Agent Loop 职责**:
+- **Agent Runtime / Loop 职责**:
   {{agent_loop_responsibilities}}
 
 - **Prompt Builder 职责**:

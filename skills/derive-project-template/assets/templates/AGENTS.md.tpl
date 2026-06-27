@@ -2,37 +2,81 @@
 
 ## AGENTS.md Role
 
-This file provides durable project guidance for AI coding agents before they
-start work in this repository.
+This file is the AI coding work entry point for this repository and the
+top-level index for local documentation and collaboration rules.
 
-Keep it small. Include only guidance that changes AI development decisions,
-such as project purpose, functional scope, module boundaries, required reading
-rules, build and test commands, and repository-specific constraints.
+It answers only these questions:
 
-Do not use this file as a full documentation dump. Long-form protocols, design
-rules, code maps, Agent context, and detailed implementation notes belong in
-dedicated documents linked from this file.
+- which collaboration rules must be read before starting work
+- which development documents must be read for specific task types
+- what responsibility each linked document carries
+
+It must not contain full Agent design boundaries, code implementation plans,
+single-task plans, temporary decisions, or work progress.
+
+Keep this file short, stable, and scannable. Long-form protocols, design rules,
+code maps, Agent context, and detailed implementation notes belong in dedicated
+documents linked from this file.
 
 ## Context Loading Rules
 
-Read `docs/ai-guidelines/COLLABORATION-PROTOCOL.md` before planning, local file
-changes, persistent commands, branch changes, merges, or commits.
+### Collaboration Protocol
 
-Read `docs/engineering-guidelines/DESIGN-PRINCIPLES.md` before adding modules,
-changing dependencies, introducing abstractions, changing layer boundaries, or
-making architecture-level decisions.
+- Read when: planning, local file changes, persistent commands, branch changes,
+  merges, commits, or when the user asks to follow the collaboration protocol.
+- Used for: change control, plan shape, branch strategy, execution confirmation,
+  and commit preferences.
+- Does not replace: project facts, code structure, design rules, or Agent
+  development boundaries.
 
-Read `docs/architecture/codebase-map.md` before code navigation, file placement,
-module responsibility checks, or source structure changes.
+Read: `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
 
-Read `docs/agents/<agent>.md` before implementing, modifying, or refactoring a
-specific Agent.
+### Design Principles
+
+- Read when: adding modules, changing dependencies, introducing abstractions,
+  changing layer boundaries, or making architecture-level decisions.
+- Used for: software design constraints, dependency direction, layering, and
+  abstraction decisions.
+- Does not replace: the current codebase map or project-specific module facts.
+
+Read: `docs/engineering-guidelines/DESIGN-PRINCIPLES.md`
+
+### Codebase Map
+
+- Read when: code navigation, file placement, module responsibility checks,
+  source structure changes, tests, verification, or debugging.
+- Used for: current directories, modules, file responsibilities, and entry
+  points.
+- Does not replace: Agent capability boundaries or design principles.
+
+Read: `docs/architecture/codebase-map.md`
 
 After changing the codebase map, run:
 
 ```bash
 python3 scripts/check-codebase-map-format.py
 ```
+
+### Agent Development Context
+
+- Read when: implementing, modifying, or refactoring a specific Agent.
+- Used for: Agent role boundaries, tool contracts, data boundaries, workflows,
+  failure modes, and testing requirements.
+- Does not replace: task plans, collaboration protocol, codebase map, or runtime
+  prompts.
+
+Read: `docs/agents/<agent>.md`
+
+### Agent Context Template
+
+- Read when: creating a new Agent development context document, modifying the
+  shared Agent document structure, or upgrading the Agent context template.
+- Used for: stable Agent context document structure.
+- Does not replace: a concrete Agent development context document or a
+  task-specific implementation plan.
+
+Read: `docs/agents/<agent>.md` first for existing Agent work. Read the template
+only for Agent document creation or template upgrades.
 
 {{agent_development_context_index}}
 ## Project Context

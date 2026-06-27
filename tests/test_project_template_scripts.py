@@ -87,6 +87,9 @@ def test_generates_docs_without_template_artifacts(tmp_path: Path) -> None:
     assert "{{" not in agents + readme + codebase_map + design_principles
     assert "## AGENTS.md Role" in agents
     assert "## Context Loading Rules" in agents
+    assert "AI coding work entry point" in agents
+    assert "top-level index" in agents
+    assert "Does not replace" in agents
     assert "AI-CODING-BEHAVIOR.md" not in agents
     assert "docs/ai-guidelines/COLLABORATION-PROTOCOL.md" in agents
     assert "docs/engineering-guidelines/DESIGN-PRINCIPLES.md" in agents
@@ -101,6 +104,13 @@ def test_generates_docs_without_template_artifacts(tmp_path: Path) -> None:
     assert (
         output / "docs" / "ai-guidelines" / "COLLABORATION-PROTOCOL.md"
     ).exists()
+    collaboration_protocol = (
+        output / "docs" / "ai-guidelines" / "COLLABORATION-PROTOCOL.md"
+    ).read_text(encoding="utf-8")
+    assert "### 1.4 Document Change Details" in collaboration_protocol
+    assert "Document Change Details:" in collaboration_protocol
+    assert "### 1.5 Branch Strategy" in collaboration_protocol
+    assert "### 1.6 Merge Strategy" in collaboration_protocol
     assert (
         output / ".agents" / "skills" / "karpathy-guidelines" / "SKILL.md"
     ).exists()
@@ -209,6 +219,25 @@ def test_audit_reports_invalid_codebase_map(tmp_path: Path) -> None:
     assert "Replace" not in result.stdout
 
 
+def test_audit_does_not_check_python_checker_placeholders(tmp_path: Path) -> None:
+    config = tmp_path / "project.json"
+    output = tmp_path / "out"
+    write_config(config)
+    generated = run_script(INIT_SCRIPT, "--config", str(config), "--output", str(output))
+    assert generated.returncode == 0, generated.stderr
+    checker = output / "scripts" / "check-codebase-map-format.py"
+    checker.write_text(
+        checker.read_text(encoding="utf-8")
+        + '\nPLACEHOLDER_RE_FOR_TEST = r"\\{\\{[^}]+\\}\\}"\n',
+        encoding="utf-8",
+    )
+
+    result = run_script(AUDIT_SCRIPT, "--path", str(output))
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "Contains unresolved template placeholder" not in result.stdout
+
+
 def test_audit_reports_failed_for_missing_path(tmp_path: Path) -> None:
     missing = tmp_path / "missing"
 
@@ -276,6 +305,12 @@ def test_generates_agent_context_when_agent_fields_are_provided(tmp_path: Path) 
     assert "search_notes" in agent_content
     assert '"query": "string"' in agent_content
     assert "Answers cite retrieved sources." in agent_content
+    assert "不得记录单次任务计划" in agent_content
+    assert "临时实施步骤" in agent_content
+    assert "Git 分支安排" in agent_content
+    assert "工作进度" in agent_content
+    assert "当前对话待办" in agent_content
+    assert "Agent Runtime / Loop 职责" in agent_content
     assert "TEMPLATE-INSTRUCTION" not in agent_content
     assert "{{" not in agent_content
 

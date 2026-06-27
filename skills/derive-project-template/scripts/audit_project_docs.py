@@ -142,10 +142,20 @@ def _collect_text_structure_findings(root: Path) -> list[AuditFinding]:
 
     for relative in REQUIRED_FILES:
         content = _read_existing_text(root, relative)
-        if content is not None and relative.as_posix() not in {"AGENTS.md", "README.md"}:
+        if (
+            content is not None
+            and relative.as_posix() not in {"AGENTS.md", "README.md"}
+            and _should_check_template_artifacts(relative)
+        ):
             findings.extend(_check_template_artifacts(relative.as_posix(), content))
 
     return findings
+
+
+def _should_check_template_artifacts(relative: Path) -> bool:
+    """Return whether a generated file should be checked for template markers."""
+    path = relative.as_posix()
+    return relative.suffix == ".md" or path in {"AGENTS.md", "README.md"}
 
 
 def _check_required_sections(
