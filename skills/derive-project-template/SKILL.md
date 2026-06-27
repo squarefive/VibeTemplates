@@ -221,8 +221,9 @@ Delete:
 
 Agent-facing project entry file.
 
-This file provides durable project guidance and context loading rules for AI
-coding agents before they start work in a repository.
+This file is the AI coding work entry point and top-level documentation index
+for a repository. It provides durable project guidance and context loading
+rules before AI coding agents start work.
 
 Include only stable project facts and guidance that changes AI development
 decisions:
@@ -236,11 +237,14 @@ decisions:
 
 Do not add a current-goal section.
 
-Do not use `AGENTS.md` as a full documentation dump. Long-form protocols,
-design rules, code maps, Agent context, and detailed implementation notes belong
-in dedicated documents linked from this file.
+Do not use `AGENTS.md` as a full documentation dump. Do not record full Agent
+design boundaries, code implementation plans, single-task plans, temporary
+decisions, or work progress here. Long-form protocols, design rules, code maps,
+Agent context, and detailed implementation notes belong in dedicated documents
+linked from this file.
 
-Do include fixed context loading rules that explain when to read:
+Do include fixed context loading rules that explain each linked document's read
+conditions, responsibility, and what it does not replace:
 
 - `docs/ai-guidelines/COLLABORATION-PROTOCOL.md`
 - `docs/engineering-guidelines/DESIGN-PRINCIPLES.md`
@@ -317,6 +321,9 @@ Copy this file from the bundled template during generation. Do not rewrite it du
 
 This file covers planning requirements, execution confirmation, branch strategy, merge strategy, and commit preferences.
 
+For documentation changes, this file also requires implementation plans to list
+section-level document change details for each affected document.
+
 Project-specific rules belong in `AGENTS.md`, not in this file.
 
 ### `.agents/skills/karpathy-guidelines/SKILL.md`
@@ -337,6 +344,10 @@ Generate this file only when both `agent_module_name` and
 `agent_chinese_name` are extractable. Fill missing Agent document content with
 `_Not provided._`; do not invent role boundaries, tools, workflows, data
 models, or testing requirements.
+
+This file records stable Agent design boundaries only. It must not record
+single-task plans, temporary implementation steps, Git branch arrangements, work
+progress, or current-conversation todos.
 
 When Agent document content is available, fill the Agent template placeholders
 from provided context while preserving the template's section, list, table, and
